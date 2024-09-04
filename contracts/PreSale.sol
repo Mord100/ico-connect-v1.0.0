@@ -47,12 +47,12 @@ contract ICOMarketplace {
         _;
     }
 
-    modifier onlyCreater(address _token){
+    modifier onlyCreator(address _token){
         require(msg.sender == tokenDetails[_token].creator, "Caller is not the token creator");
         _;
     }
 
-    recieve() external payable{
+    receive() external payable{
         revert("Contract does not accept Ether directly");
     }
 
@@ -131,7 +131,7 @@ contract ICOMarketplace {
         require(tokenDetails[_token].supported, "Token not supported");
 
         return tokenDetails[_token]
-    }
+    };
 
     function getTokenCreatedBy(address _creator) external view returns(TokenDetails[] memory){
         uint256 count = 0;
