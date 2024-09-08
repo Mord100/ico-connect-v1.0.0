@@ -93,12 +93,12 @@ contract ICOMarketplace {
         require(msg.value == totalCost, "Incorrect Ether amount sent");
 
         //TRANSFER THE PAYMENT TO THE TOKEN CREATOR
-        (bool sent,) = details.creator.call{value: msg.value}(");
+        (bool sent,) = details.creator.call{value: msg.value}("");
         require(sent, "failed to transfer Ether to token creator");
 
         IERC20 token = IERC20(_token);
         require(token.transfer(msg.sender, _amount * 10**18), "Transfer failed");
-        emit TokenTransferred(_token, msg.sender, amount);
+        emit TokenTransferred(_token, msg.sender, _amount);
 
 
     }
@@ -130,13 +130,13 @@ contract ICOMarketplace {
     function getTokenDetails(address _token) external view returns(TokenDetails memory){
         require(tokenDetails[_token].supported, "Token not supported");
 
-        return tokenDetails[_token]
-    };
+        return tokenDetails[_token];
+    }
 
     function getTokenCreatedBy(address _creator) external view returns(TokenDetails[] memory){
         uint256 count = 0;
 
-        for (uint256 i = 0; i < AllSupportedTokens.length; i++){
+        for (uint256 i = 0; i < allSupportedTokens.length; i++){
             if(tokenDetails[allSupportedTokens[i]].creator == _creator){
                 count++;
             }
@@ -145,9 +145,9 @@ contract ICOMarketplace {
         TokenDetails[] memory tokens = new TokenDetails[] (count);
         uint256 index = 0;
         for (uint256 i = 0; i < allSupportedTokens.length; i++){
-            if(tokenDetails[allSupportedTokens[i]].creator == -creator){
+            if(tokenDetails[allSupportedTokens[i]].creator == _creator){
                 tokens[index] = tokenDetails[allSupportedTokens[i]];
-                index++
+                index++;
             }
         }
         return tokens;
