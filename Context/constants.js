@@ -1,11 +1,14 @@
-import {ethers} from "ethers"
+import {ethers, Signer} from "ethers"
 import web3Modal from "web3modal"
 
 import ERC20Generator from "./ERC20Generator.json"
 import icoMarketplace from "./icoMarketplace.json"
 
+export const ERC20Generator_ABI = ERC20Generator.abi;
+export const ERC20Generator_BYTECODE = ERC20Generator.bytecode;
+
 export const ICO_MARKETPLACE_ADDRESS = process.env.NEXT_PUBLIC_ICO_MARKETPLACE_ADDRESS;
-export const ICO_MARKETPLACE_ABI = icoMarketplace;
+export const ICO_MARKETPLACE_ABI = icoMarketplace.abi;
 
 //PINATTA KEY
 export const PINATA_API_KEY = process.env.NEXT_PUBLIC_PINATA_API_KEY;
@@ -19,7 +22,7 @@ const networks = {
         nativeCurrency: {
             name: "MATIC",
             symbol: "MATIC",
-            decimails: 18,
+            decimals: 18,
         },
         rpcUrls: ["https://rpc-amoy.polygon.technology"],
         blockExplorerUrls: ["https://www.oklink.com/amoy"],
@@ -30,7 +33,7 @@ const networks = {
         nativeCurrency: {
             name: "MATIC",
             symbol: "MATIC",
-            decimails: 18,
+            decimals: 18,
         },
         rpcUrls: ["https://rpc-ankr.com/polygon"],
         blockExplorerUrls: ["https:/polygonscan.com/"],
@@ -41,7 +44,7 @@ const networks = {
         nativeCurrency: {
             name: "Binance Chain",
             symbol: "BNB",
-            decimails: 18,
+            decimals: 18,
         },
         rpcUrls: ["https://rpc-ankr.com/polygon"],
         blockExplorerUrls: ["https:/polygonscan.com/"],
@@ -52,7 +55,7 @@ const networks = {
         nativeCurrency: {
             name: "ETH",
             symbol: "ETH",
-            decimails: 18,
+            decimals: 18,
         },
         rpcUrls: ["https://mainnet.base.org"],
         blockExplorerUrls: ["https:/bscscan.com/"],
@@ -81,4 +84,54 @@ export const handleNetworkSwitch = async () => {
     const networkName = "polygon_amoy";
     await changeNetwork({networkName});
 }
+
+export const shortenAddress = (address) => 
+    `${address.slice(0,5)}...${address.length - 4}`;
+
+//CONTRACT
+const fetchContract = (address, abi, Signer) => 
+    new ethers.Contract(address, abi, Signer);
+
+export const ICO_MARKETPLACE_CONTRACT = async () => {
+    try {
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+
+        const signer = provider.getSigner();
+
+        const contract = fetchContract(
+            ICO_MARKETPLACE_ADDRESS,
+            ICO_MARKETPLACE_ABI,
+            signer
+        );
+
+        return contract;
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+//TOKEN CONTRACT
+
+export const TOKEN_CONTRACT = async (TOKEN_ADDRESS) => {
+    try {
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+
+        const signer = provider.getSigner();
+
+        const contract = fetchContract(
+            TOKEN_ADDRESS,
+            ERC20Generator_ABI,
+            signer
+        );
+
+        return contract;
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 
