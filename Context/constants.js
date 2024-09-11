@@ -116,6 +116,7 @@ export const ICO_MARKETPLACE_CONTRACT = async () => {
 
 export const TOKEN_CONTRACT = async (TOKEN_ADDRESS) => {
     try {
+        const web3Modal = new web3Modal();
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
 
