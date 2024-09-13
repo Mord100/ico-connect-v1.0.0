@@ -45,6 +45,7 @@ export const StateContextProvider = ({ children }) => {
   const checkIfWalletconnected = async () => {
     try {
       if (!window.ethereum) return notifyError("No wallet found");
+      await handleNetworkSwitch();
       const accounts = await window.ethereum.request({
         method: "eth_accounts",
       });
@@ -66,10 +67,14 @@ export const StateContextProvider = ({ children }) => {
       return null;
     }
   };
+  useEffect(() => {
+    checkIfWalletconnected();
+  }, [address]);
 
   const connectWallet = async () => {
     try {
       if (!window.ethereum) return notifyError("No wallet found");
+      await handleNetworkSwitch();
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
@@ -471,6 +476,8 @@ export const StateContextProvider = ({ children }) => {
         openTransferToken,
         openTokenCreator,
         openCreateICO,
+        handleNetworkSwitch,
+        shortenAddress,
         setOpenBuyToken,
         setOpenWidthdrawToken,
         setOpenTransferToken,
@@ -485,6 +492,9 @@ export const StateContextProvider = ({ children }) => {
         buyToken,
         transferToken,
         widthdrawToken,
+        PINATA_API_KEY,
+        PINATA_SECRET_KEY,
+     ICO_MARKETPLACE_ADDRESS,
       }}
     >
       {children}
