@@ -49,8 +49,8 @@ const networks = {
         rpcUrls: ["https://rpc-ankr.com/polygon"],
         blockExplorerUrls: ["https:/polygonscan.com/"],
     },
-    bsc: {
-        chainId: `0x${Number(56).toString(16)}`,
+    base_mainnet: {
+        chainId: `0x${Number(84532).toString(16)}`,
         chainName: "Base Mainnet",
         nativeCurrency: {
             name: "ETH",
@@ -70,7 +70,7 @@ const changeNetwork = async({networkName}) => {
             method: "wallet_addEtheriumChain",
             params: [
                 {
-                  ...networkName[networkName],
+                  ...networks[networkName],
             },
                 
             ],
@@ -86,7 +86,7 @@ export const handleNetworkSwitch = async () => {
 }
 
 export const shortenAddress = (address) => 
-    `${address.slice(0,5)}...${address.length - 4}`;
+    `${address?.slice(0,5)}...${address?.slice(address?.length - 4)}`;
 
 //CONTRACT
 const fetchContract = (address, abi, Signer) => 

@@ -305,6 +305,11 @@ export const StateContextProvider = ({ children }) => {
       setLoader(true);
       notifySuccess("Purchasing token...");
 
+      if(!tokenAddress || !tokenQuantity) {
+        notifyError("Data is missing");
+        return;
+      }
+
       const address = await connectWallet();
       if (!address) {
         setLoader(false);
@@ -369,7 +374,7 @@ export const StateContextProvider = ({ children }) => {
         return;
       }
 
-      const contract = await ICO_MARKETPLACE_CONTRACT();
+      const contract = await TOKEN_CONTRACT(transferTokenData.tokenAddress);
       const _availableBal = await contract.balanceOf(address);
       const availableToken = ethers.utils.formatEther(_availableBal.toString());
 
